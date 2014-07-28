@@ -43,7 +43,10 @@ void decoderInitPreliminary(){
 	TCTL4 = 0x05;  //  0000 0101 Capture rising edges only on PT0&1
 }
 
+static unsigned long lastCylinderEventTimestamp = 0;
+
 void perDecoderReset(){} // Nothing special to reset for this code
+
 
 
 void PrimaryRPMISR(){
@@ -101,8 +104,13 @@ void PrimaryRPMISR(){
 					// TODO Calculate RPM from last primaryTrailingEdgeTimeStamp
 				}
 			}
-		}/*else*/ if(KeyUserDebugs.decoderFlags & LAST_TIMESTAMP_VALID){ // TODO temp for testing just do rpm this way, fill above out later.
-			*ticksPerDegreeRecord = thisTicksPerDegree;
+		}/*else*/ if( (KeyUserDebugs.decoderFlags & LAST_TIMESTAMP_VALID) && 
+				(KeyUserDebugs.currentEvent % 4 == 2) ){ // TODO temp for testing just do rpm this way, fill above out later.
+			if (KeyUserDebugs.currentEvent % 12 == 2) {
+				unsigned long thisCylinderEventPeriod = thisEventTimeStamp - lastCylinderEventTimestamp;
+				lastCylinderEventTimestamp = thisEventTimeStamp;
+				*ticksPerDegreeRecord = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 
+			}
 			sampleEachADC(ADCBuffers);
 			Counters.syncedADCreadings++;
 
