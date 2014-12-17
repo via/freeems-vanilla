@@ -204,9 +204,9 @@ const volatile fixedConfig1 fixedConfigs1 FIXEDCONF1 = {
 
 #elif CONFIG == VIASUPRA_ID // Firing order 1-5-3-6-2-4
 		anglesOfTDC: {ANGLE(0), ANGLE(120), ANGLE(240), ANGLE(360), ANGLE(480), ANGLE(600), ANGLE(0), ANGLE(120), ANGLE(240), ANGLE(360), ANGLE(480), ANGLE(600)},
-		outputEventPinNumbers:       {2,1,0,2,1,0,4,3,5,4,3,5}, // Weird order because I kept messing up my wiring.
+		outputEventPinNumbers:       {0,1,2,0,1,2,3,4,5,3,4,5}, // Weird order because I kept messing up my wiring.
 		schedulingConfigurationBits: {0,0,0,0,0,0,1,1,1,1,1,1}, // Ones represent scheduling for injection, zeros represent scheduling for ignition
-		decoderEngineOffset:         ANGLE(90.00),
+		decoderEngineOffset:         ANGLE(182.00),
 		numberOfConfiguredOutputEvents:         12, // 6 coil events, 6 injection events
 		numberOfInjectionsPerEngineCycle:        2  // Semi-sequential
 
@@ -272,7 +272,7 @@ const volatile fixedConfig1 fixedConfigs1 FIXEDCONF1 = {
 #endif
 		},
 		OverBoost:{
-			disableThreshold:  KPA(250), // Cut close to std sensor max
+			disableThreshold:  KPA(240), // Cut close to std sensor max
 			reenableThreshold: KPA(105)  // Re enable when boost gone all together (Setting to anything at or below 100kPa can cause a dead engine)
 		},
 		cutsEnabled:{
