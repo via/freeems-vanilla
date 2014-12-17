@@ -105,8 +105,8 @@ void PrimaryRPMISR(){
 				}
 			}
 		}/*else*/ if( (KeyUserDebugs.decoderFlags & LAST_TIMESTAMP_VALID) && 
-				(KeyUserDebugs.currentEvent % 4 == 2) ){ // TODO temp for testing just do rpm this way, fill above out later.
-			if (KeyUserDebugs.currentEvent % 12 == 2) {
+				(KeyUserDebugs.currentEvent % 4 == 3) ){ // TODO temp for testing just do rpm this way, fill above out later.
+			if (KeyUserDebugs.currentEvent % 12 == 3) {
 				unsigned long thisCylinderEventPeriod = thisEventTimeStamp - lastCylinderEventTimestamp;
 				lastCylinderEventTimestamp = thisEventTimeStamp;
 				*ticksPerDegreeRecord = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 

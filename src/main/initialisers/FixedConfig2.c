@@ -75,8 +75,8 @@ const volatile fixedConfig2 fixedConfigs2 FIXEDCONF2 = {
 		MAPMinimum:    GM2BarMin,
 		MAPRange:      GM2BarRange,
 #elif CONFIG == VIASUPRA_ID
-		MAPMinimum:    KPA(-35.00), // This config runs a 3.5bar AEM sensor, but does not use the raw AEM values
-		MAPRange:      (KPA(395.00) - KPA(-35.00)),
+		MAPMinimum:    VIA_MPX4250AMin,
+		MAPRange:      VIA_MPX4250ARange,
 #elif CONFIG == SLATER_ID
 		MAPMinimum:    HondaDenso183kPaMin,
 		MAPRange:      HondaDenso183kPaRange,
@@ -94,6 +94,9 @@ const volatile fixedConfig2 fixedConfigs2 FIXEDCONF2 = {
 #if CONFIG == SNOTROCKET_ID
 		AAPMinimum:    HondaDenso183kPaMin,
 		AAPRange:      HondaDenso183kPaRange,
+#elif CONFIG == VIASUPRA_ID
+		AAPMinimum:    VIA_MPXA6115AMin,
+		AAPRange:      VIA_MPXA6115ARange,
 #else
 		AAPMinimum:    MPXA6115AMin,
 		AAPRange:      MPXA6115ARange,

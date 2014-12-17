@@ -117,10 +117,18 @@
 #define MPXA6115AMax             KPA(120.0)     /* Pressure read at highest ADC reading */
 #define MPXA6115ARange           (MPXA6115AMax - MPXA6115AMin)
 
+#define VIA_MPXA6115AMin             KPA( 18.5)     /* Pressure read at lowest ADC reading */
+#define VIA_MPXA6115AMax             KPA(127.7)     /* Pressure read at highest ADC reading */
+#define VIA_MPXA6115ARange           (VIA_MPXA6115AMax - VIA_MPXA6115AMin)
+
 /* www.freescale.com/files/sensors/doc/data_sheet/MPX4250A.pdf */
 #define MPX4250AMin              KPA(  8)       /* Pressure read at lowest ADC reading */
 #define MPX4250AMax              KPA(260)       /* Pressure read at highest ADC reading */
 #define MPX4250ARange            (MPX4250AMax - MPX4250AMin)
+
+#define VIA_MPX4250AMin              KPA(  16.6)       /* Pressure read at lowest ADC reading */
+#define VIA_MPX4250AMax              KPA(265.8)       /* Pressure read at highest ADC reading */
+#define VIA_MPX4250ARange            (VIA_MPX4250AMax - VIA_MPX4250AMin)
 
 #define MPXH6300AMin             KPA( 12)       /* Pressure read at lowest ADC reading */
 #define MPXH6300AMax             KPA(320)       /* Pressure read at highest ADC reading */
