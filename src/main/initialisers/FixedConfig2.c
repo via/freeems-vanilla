@@ -140,8 +140,8 @@ const volatile fixedConfig2 fixedConfigs2 FIXEDCONF2 = {
 		TPSMinimumADC: 185,
 		TPSMaximumADC: 809
 #elif CONFIG == VIASUPRA_ID
-		TPSMinimumADC: 100,
-		TPSMaximumADC: 620
+		TPSMinimumADC: 36,
+		TPSMaximumADC: 15
 #else // Default for a normal TPS slope
 		TPSMinimumADC: 0,
 		TPSMaximumADC: ADC_MAX_VALUE
