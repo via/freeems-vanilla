@@ -38,7 +38,7 @@
 #include "inc/freeEMS.h"
 #include "inc/commsISRs.h"
 #include "inc/utils.h"
-#include <string.h>
+#include <stddef.h>
 
 
 /** @brief Add two unsigned shorts safely
@@ -202,9 +202,9 @@ void sampleLoopADC(ADCBuffer *Arrays){
 }
 
 
-/* @brief Read ADCs with memcpy()
+/* @brief Read ADCs with __builtin_memcpy()
  *
- * Read ADCs into the correct bank using two fixed calls to memcpy()
+ * Read ADCs into the correct bank using two fixed calls to __builtin_memcpy()
  *
  * @param Arrays a pointer to an ADCBuffer struct to store ADC values in.
  *
@@ -212,8 +212,8 @@ void sampleLoopADC(ADCBuffer *Arrays){
  * @bug this will corrupt your comms if you use it... don't use it
  *
 void sampleBlockADC(ADCBuffer *Arrays){
-	memcpy(Arrays, (void*)ATD0_BASE, 16);
-	memcpy(Arrays+16, (void*)ATD1_BASE, 16);
+	__builtin_memcpy(Arrays, (void*)ATD0_BASE, 16);
+	__builtin_memcpy(Arrays+16, (void*)ATD1_BASE, 16);
 }*/
 
 

@@ -49,7 +49,8 @@
 #include "inc/init.h"
 #include "inc/decoderInterface.h"
 #include "inc/xgateVectors.h"
-#include <string.h>
+
+#include <stddef.h>
 
 
 /** @brief The main top level init
@@ -258,15 +259,15 @@ void initFuelAddresses(){
 void initPagedRAMFuel(void){
 	/* Copy the tables from flash to RAM */
 	RPAGE = RPAGE_FUEL_ONE;
-	memcpy((void*)&TablesA, VETableMainFlashLocation,       sizeof(mainTable));
-	memcpy((void*)&TablesB, VETableSecondaryFlashLocation,  sizeof(mainTable));
-	memcpy((void*)&TablesC, AirflowTableFlashLocation,      sizeof(mainTable));
-	memcpy((void*)&TablesD, LambdaTableFlashLocation,       sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesA, VETableMainFlashLocation,       sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesB, VETableSecondaryFlashLocation,  sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesC, AirflowTableFlashLocation,      sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesD, LambdaTableFlashLocation,       sizeof(mainTable));
 	RPAGE = RPAGE_FUEL_TWO;
-	memcpy((void*)&TablesA, VETableMainFlash2Location,      sizeof(mainTable));
-	memcpy((void*)&TablesB, VETableSecondaryFlash2Location, sizeof(mainTable));
-	memcpy((void*)&TablesC, AirflowTableFlash2Location,     sizeof(mainTable));
-	memcpy((void*)&TablesD, LambdaTableFlash2Location,      sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesA, VETableMainFlash2Location,      sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesB, VETableSecondaryFlash2Location, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesC, AirflowTableFlash2Location,     sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesD, LambdaTableFlash2Location,      sizeof(mainTable));
 }
 
 
@@ -294,15 +295,15 @@ void initTimingAddresses(){
 void initPagedRAMTime(){
 	/* Copy the tables from flash to RAM */
 	RPAGE = RPAGE_TIME_ONE;
-	memcpy((void*)&TablesA, IgnitionAdvanceTableMainFlashLocation,        sizeof(mainTable));
-	memcpy((void*)&TablesB, IgnitionAdvanceTableSecondaryFlashLocation,   sizeof(mainTable));
-	memcpy((void*)&TablesC, InjectionAdvanceTableMainFlashLocation,       sizeof(mainTable));
-	memcpy((void*)&TablesD, InjectionAdvanceTableSecondaryFlashLocation,  sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesA, IgnitionAdvanceTableMainFlashLocation,        sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesB, IgnitionAdvanceTableSecondaryFlashLocation,   sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesC, InjectionAdvanceTableMainFlashLocation,       sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesD, InjectionAdvanceTableSecondaryFlashLocation,  sizeof(mainTable));
 	RPAGE = RPAGE_TIME_TWO;
-	memcpy((void*)&TablesA, IgnitionAdvanceTableMainFlash2Location,       sizeof(mainTable));
-	memcpy((void*)&TablesB, IgnitionAdvanceTableSecondaryFlash2Location,  sizeof(mainTable));
-	memcpy((void*)&TablesC, InjectionAdvanceTableMainFlash2Location,      sizeof(mainTable));
-	memcpy((void*)&TablesD, InjectionAdvanceTableSecondaryFlash2Location, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesA, IgnitionAdvanceTableMainFlash2Location,       sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesB, IgnitionAdvanceTableSecondaryFlash2Location,  sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesC, InjectionAdvanceTableMainFlash2Location,      sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesD, InjectionAdvanceTableSecondaryFlash2Location, sizeof(mainTable));
 }
 
 
@@ -370,23 +371,23 @@ void initTunableAddresses(){
 void initPagedRAMTune(){
 	/* Copy the tables from flash to RAM */
 	RPAGE = RPAGE_TUNE_ONE;
-	memcpy((void*)&TablesA, SmallTablesAFlashLocation, sizeof(mainTable));
-	memcpy((void*)&TablesB, SmallTablesBFlashLocation, sizeof(mainTable));
-	memcpy((void*)&TablesC, SmallTablesCFlashLocation, sizeof(mainTable));
-	memcpy((void*)&TablesD, SmallTablesDFlashLocation, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesA, SmallTablesAFlashLocation, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesB, SmallTablesBFlashLocation, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesC, SmallTablesCFlashLocation, sizeof(mainTable));
+	__builtin_memcpy((void*)&TablesD, SmallTablesDFlashLocation, sizeof(mainTable));
 	RPAGE = RPAGE_TUNE_TWO;
 	// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&& WARNING &&&&&&&&&&&&&&&&&&&&&&&&&&&&&& //
 	//    You will get garbage if you use table switching at this time!!!    //
 	//         XGATE code being run from this region temporarily!!!          //
 	//   Writing to these tables WILL corrupt XGATE code/kill your engine!   //
 	// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&& WARNING &&&&&&&&&&&&&&&&&&&&&&&&&&&&&& //
-	//memcpy(xgateSchedRAMAddress, xgateSchedFlashAddress, (xgateSchedEnd - xgateSched));
-	//memcpy(xgateInjectorsOnRAMAddress, xgateInjectorsOnFlashAddress, (xgateInjectorsOnEnd - xgateInjectorsOn));
-	//memcpy(xgateInjectorsOffRAMAddress, xgateInjectorsOffFlashAddress, (xgateInjectorsOffEnd - xgateInjectorsOff));
-//	memcpy((void*)&TablesA,	SmallTablesAFlash2Location, sizeof(mainTable));
-//	memcpy((void*)&TablesB,	SmallTablesBFlash2Location, sizeof(mainTable));
-//	memcpy((void*)&TablesC,	SmallTablesCFlash2Location, sizeof(mainTable));
-//	memcpy((void*)&TablesD,	SmallTablesDFlash2Location, sizeof(mainTable));
+	//__builtin_memcpy(xgateSchedRAMAddress, xgateSchedFlashAddress, (xgateSchedEnd - xgateSched));
+	//__builtin_memcpy(xgateInjectorsOnRAMAddress, xgateInjectorsOnFlashAddress, (xgateInjectorsOnEnd - xgateInjectorsOn));
+	//__builtin_memcpy(xgateInjectorsOffRAMAddress, xgateInjectorsOffFlashAddress, (xgateInjectorsOffEnd - xgateInjectorsOff));
+//	__builtin_memcpy((void*)&TablesA,	SmallTablesAFlash2Location, sizeof(mainTable));
+//	__builtin_memcpy((void*)&TablesB,	SmallTablesBFlash2Location, sizeof(mainTable));
+//	__builtin_memcpy((void*)&TablesC,	SmallTablesCFlash2Location, sizeof(mainTable));
+//	__builtin_memcpy((void*)&TablesD,	SmallTablesDFlash2Location, sizeof(mainTable));
 }
 
 

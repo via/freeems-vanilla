@@ -51,7 +51,7 @@
 #include "inc/decoderInterface.h"
 #include "inc/commsCore.h"
 #include "inc/init.h"
-#include <string.h> /// @todo TODO this is pulling in the system string.h not the m68hc1x version, and functions other than memcpy do not work because they are not in crt1.o or other included-by-default libs
+#include <stddef.h>
 #include "decoders/inc/BenchTest.h"
 
 
@@ -77,7 +77,7 @@ unsigned short populateBasicDatalog(){
 			confSize -= localSize;
 			break;
 		}
-		memcpy(TXBufferCurrentPositionHandler, TablesB.SmallTablesB.loggingSettings.logChunks[chunks].address, localSize);
+		__builtin_memcpy(TXBufferCurrentPositionHandler, TablesB.SmallTablesB.loggingSettings.logChunks[chunks].address, localSize);
 		TXBufferCurrentPositionHandler += localSize;
 	}
 	// After copying data, otherwise tempClock is NEVER zero and reset detection does NOT work
@@ -318,7 +318,7 @@ void decodePacketAndRespond(){
 			*TXHeaderFlags |= HEADER_HAS_LENGTH;
 			TXBufferCurrentPositionHandler += 2;
 			/* Load the body into place */
-			memcpy((void*)TXBufferCurrentPositionHandler, (void*)&interfaceVersion, sizeof(interfaceVersion));
+			__builtin_memcpy((void*)TXBufferCurrentPositionHandler, (void*)&interfaceVersion, sizeof(interfaceVersion));
 			TXBufferCurrentPositionHandler += sizeof(interfaceVersion);
 			break;
 		}
@@ -333,7 +333,7 @@ void decodePacketAndRespond(){
 			*TXHeaderFlags |= HEADER_HAS_LENGTH;
 			TXBufferCurrentPositionHandler += 2;
 			/* Load the body into place */
-			memcpy((void*)TXBufferCurrentPositionHandler, (void*)&firmwareVersion, sizeof(firmwareVersion));
+			__builtin_memcpy((void*)TXBufferCurrentPositionHandler, (void*)&firmwareVersion, sizeof(firmwareVersion));
 			TXBufferCurrentPositionHandler += sizeof(firmwareVersion);
 			break;
 		}
@@ -355,7 +355,7 @@ void decodePacketAndRespond(){
 			*TXHeaderFlags |= HEADER_HAS_LENGTH;
 			TXBufferCurrentPositionHandler += 2;
 			/* Load the body into place */
-			memcpy((void*)TXBufferCurrentPositionHandler, (void*)&RXBuffer, RXPacketLengthReceived);
+			__builtin_memcpy((void*)TXBufferCurrentPositionHandler, (void*)&RXBuffer, RXPacketLengthReceived);
 			/* Note, there is no overflow check here because the TX buffer is slightly       */
 			/* bigger than the RX buffer and there is overflow checking for receives anyway. */
 			TXBufferCurrentPositionHandler += RXPacketLengthReceived;
@@ -531,10 +531,10 @@ void decodePacketAndRespond(){
 				// For sub regions, construct an image for verification
 				if(size != details.size){
 					// Copy data from destination location to buffer
-					memcpy(leftOverBuffer, details.RAMAddress, details.size);
+					__builtin_memcpy(leftOverBuffer, details.RAMAddress, details.size);
 
 					// Copy data from rx buffer to buffer over writing old data
-					memcpy(leftOverBuffer + offset, RXBufferCurrentPosition, size);
+					__builtin_memcpy(leftOverBuffer + offset, RXBufferCurrentPosition, size);
 
 					bufferToCheck = leftOverBuffer;
 				}else{
@@ -556,7 +556,7 @@ void decodePacketAndRespond(){
 			}
 
 			// Copy from the RX buffer to the block of RAM
-			memcpy((unsigned char*)(details.RAMAddress + offset), RXBufferCurrentPosition, size);
+			__builtin_memcpy((unsigned char*)(details.RAMAddress + offset), RXBufferCurrentPosition, size);
 
 			// Check that the write was successful
 			unsigned char index = compare(RXBufferCurrentPosition, (unsigned char*)(details.RAMAddress + offset), size);
@@ -629,13 +629,13 @@ void decodePacketAndRespond(){
 					PPAGE = details.FlashPage;
 
 					// Copy data from destination location to buffer
-					memcpy(leftOverBuffer, details.FlashAddress, details.size);
+					__builtin_memcpy(leftOverBuffer, details.FlashAddress, details.size);
 
 					/* Restore the original flash page */
 					PPAGE = oldFlashPage;
 
 					// Copy data from rx buffer to buffer over writing old data
-					memcpy(leftOverBuffer + offset, RXBufferCurrentPosition, size);
+					__builtin_memcpy(leftOverBuffer + offset, RXBufferCurrentPosition, size);
 
 					bufferToCheck = leftOverBuffer;
 				}else{
@@ -677,7 +677,7 @@ void decodePacketAndRespond(){
 				RPAGE = details.RAMPage;
 
 				/* Copy from the RX buffer to the block of RAM */
-				memcpy((unsigned char*)(details.RAMAddress + offset), RXBufferCurrentPosition, size);
+				__builtin_memcpy((unsigned char*)(details.RAMAddress + offset), RXBufferCurrentPosition, size);
 
 				/* Check that the write was successful */
 				unsigned char index = compare(RXBufferCurrentPosition, (unsigned char*)(details.RAMAddress + offset), size);
@@ -747,7 +747,7 @@ void decodePacketAndRespond(){
 			RPAGE = details.RAMPage;
 
 			/* Copy the block of RAM to the TX buffer */
-			memcpy(TXBufferCurrentPositionHandler, (unsigned char*)(details.RAMAddress + offset), size);
+			__builtin_memcpy(TXBufferCurrentPositionHandler, (unsigned char*)(details.RAMAddress + offset), size);
 			TXBufferCurrentPositionHandler += size;
 
 			/* Restore the original RAM and flash pages */
@@ -810,7 +810,7 @@ void decodePacketAndRespond(){
 			PPAGE = details.FlashPage;
 
 			/* Copy the block of flash to the TX buffer */
-			memcpy(TXBufferCurrentPositionHandler, (unsigned char*)(details.FlashAddress + offset), size);
+			__builtin_memcpy(TXBufferCurrentPositionHandler, (unsigned char*)(details.FlashAddress + offset), size);
 			TXBufferCurrentPositionHandler += size;
 
 			/* Restore the original RAM and flash pages */
@@ -962,7 +962,7 @@ void decodePacketAndRespond(){
 			TXBufferCurrentPositionHandler++;
 
 			/* Load the body into place */
-			memcpy((void*)TXBufferCurrentPositionHandler, address, length);
+			__builtin_memcpy((void*)TXBufferCurrentPositionHandler, address, length);
 			TXBufferCurrentPositionHandler += length;
 
 			break;
@@ -1239,7 +1239,7 @@ void decodePacketAndRespond(){
 				RXBufferCurrentPosition += 6;
 				unsigned short* testPulseWidths = (unsigned short*)RXBufferCurrentPosition;
 				RXBufferCurrentPosition += 12;
-				memcpy((void*)TXBufferCurrentPositionHandler, (void*)testEventNumbers, 18);
+				__builtin_memcpy((void*)TXBufferCurrentPositionHandler, (void*)testEventNumbers, 18);
 				TXBufferCurrentPositionHandler += 18;
 
 				// Reset the clock for reading timeout

@@ -43,7 +43,7 @@
 #include "inc/flashBurn.h"
 #include "inc/commsISRs.h"
 #include "inc/commsCore.h"
-#include <string.h>
+#include <stddef.h>
 
 
 /** @brief Erases a sector of flash memory
@@ -139,21 +139,21 @@ unsigned short writeBlock(blockDetails* details, void* buffer){
 
 		/* If the chunk doesn't start at the beginning of the sector, copy the first area from flash */
 		if(offset != 0){
-			memcpy(buffer, FlashAddress, offset);
+			__builtin_memcpy(buffer, FlashAddress, offset);
 			buffer += offset;
 		}
 
 		/* Copy the middle section up regardless */
 		unsigned char oldRAMPage = RPAGE;
 		RPAGE = details->RAMPage;
-		memcpy(buffer, details->RAMAddress, details->size);
+		__builtin_memcpy(buffer, details->RAMAddress, details->size);
 		buffer += details->size;
 		RPAGE = oldRAMPage;
 
 		/* If the chunk doesn't end at the end of the sector, copy the last are from flash */
 		if((offset + details->size) < 1024){
 			void* chunkFlashEndAddress = details->FlashAddress + details->size;
-			memcpy(buffer, chunkFlashEndAddress, (1024 - (offset + details->size)));
+			__builtin_memcpy(buffer, chunkFlashEndAddress, (1024 - (offset + details->size)));
 		}
 
 		/* Restore the PPAGE value back */
