@@ -87,7 +87,7 @@ typedef struct {
 
 	/* Calculated from MAP and TPS history */
 	unsigned short DMAP;  ///< Delta MAP kPa/second or similar
-	unsigned short DTPS;  ///< Delta TPS %/second or similar
+	signed short DTPS;  ///< Delta TPS %/second or similar
 
 	/* Calculated from engine position data */
 	unsigned short RPM;   ///< Revolutions Per Minute (Calced) : 0.0 - 32767.5        (0.5 RPM (/2))

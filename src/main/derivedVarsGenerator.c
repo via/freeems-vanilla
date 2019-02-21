@@ -102,33 +102,15 @@ void generateDerivedVars(){
 	DerivedVars->ETE = lookupTwoDTableUS((twoDTableUS*)&TablesA.SmallTablesA.engineTempEnrichmentTablePercent, CoreVars->CHT);
 	/* TODO The above needs some careful thought put into it around different loads and correction effects. */
 
-
-	/* Calculate the Transient Fuel Correction */
-	if(TRUE /*WWTFC*/){ /* Do ONLY WW correction if enabled */
-		// Do ww stuff, maybe pre done via RTC/RTI for consistent period?
-		DerivedVars->TFCTotal = 0; /* TODO replace with real code */
-	}else if(FALSE /*STDTFC*/){ /* Do any combination of standard approximate methods */
-		/* Initialse the variable as a base */
+	if (CoreVars->DTPS > 0) {
+		/* Map 0-5% throttle rate to 0-4 ms, cap after */
+		if (CoreVars->DTPS < 1638) {
+			DerivedVars->TFCTotal = CoreVars->DTPS * 3; /* At most about 4 mS compensation */
+		} else {
+			DerivedVars->TFCTotal = 4914;
+		}
+	} else {
 		DerivedVars->TFCTotal = 0;
-		/* Based on the rate of change of MAP and some history/taper time */
-		if(FALSE /*MAPTFC*/){
-			// Do MAP based
-			DerivedVars->TFCTotal += 0;
-		}
-
-		/* Based on the rate of change of TPS and some history/taper time */
-		if(FALSE /*TPSTFC*/){
-			// Do TPS based
-			DerivedVars->TFCTotal += 0;
-		}
-
-		/* Based on the rate of change of RPM and some history/taper time */
-		if(FALSE /*RPMTFC*/){
-			// Do RPM based
-			DerivedVars->TFCTotal += 0;
-		}
-	}else{ /* Default to no correction */
-		DerivedVars->TFCTotal = 0;
-		/* Don't throw error as correction may not be required */
 	}
+
 }

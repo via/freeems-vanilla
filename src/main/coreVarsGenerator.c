@@ -111,6 +111,17 @@ void generateCoreVars(){
 	// TODO fail safe mode, only if on the ADC rails AND configured to do so
 	// Default to a low value that will get you home if you are in Alpha-N mode
 
+	/* Do lag filtering to produce a DTPS, hardcoded to 80% for testing */
+	unsigned short laggedTPS = CoreVars->TPS;
+	signed short localDTPS;
+	if (localTPS > CoreVars->TPS) {
+		laggedTPS += ((localTPS - CoreVars->TPS) / 100) * 80;
+		localDTPS = (laggedTPS - CoreVars->TPS) / 2;
+	} else {
+		laggedTPS -= ((CoreVars->TPS - localTPS) / 100) * 80;
+		localDTPS = -((signed)((CoreVars->TPS - laggedTPS) / 2));
+	}
+
 	/* Get RPM by locking out ISRs for a second and grabbing the Tooth logging data */
 	//atomic start
 	// copy rpm data
@@ -165,5 +176,5 @@ void generateCoreVars(){
 
 //	CoreVars->DRPM = localDRPM;
 //	CoreVars->DDRPM = localDDRPM;
-//	CoreVars->DTPS = localDTPS;
+	CoreVars->DTPS = localDTPS;
 }
