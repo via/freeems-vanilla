@@ -103,11 +103,11 @@ void generateDerivedVars(){
 	/* TODO The above needs some careful thought put into it around different loads and correction effects. */
 
 	if (CoreVars->DTPS > 0) {
-		/* Map 0-5% throttle rate to 0-4 ms, cap after */
+		/* Map 0-5% throttle rate to 0-2 ms, cap after */
 		if (CoreVars->DTPS < 1638) {
-			DerivedVars->TFCTotal = CoreVars->DTPS * 3; /* At most about 4 mS compensation */
+			DerivedVars->TFCTotal = CoreVars->DTPS * 2; /* At most about 4 mS compensation */
 		} else {
-			DerivedVars->TFCTotal = 4914;
+			DerivedVars->TFCTotal = 3276;
 		}
 	} else {
 		DerivedVars->TFCTotal = 0;

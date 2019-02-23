@@ -176,5 +176,5 @@ void generateCoreVars(){
 
 //	CoreVars->DRPM = localDRPM;
 //	CoreVars->DDRPM = localDDRPM;
-	CoreVars->DTPS = localDTPS;
+	CoreVars->DTPS = laggedTPS;
 }
