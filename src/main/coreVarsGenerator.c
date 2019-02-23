@@ -115,10 +115,10 @@ void generateCoreVars(){
 	unsigned short laggedTPS = CoreVars->TPS;
 	signed short localDTPS;
 	if (localTPS > CoreVars->TPS) {
-		laggedTPS += ((localTPS - CoreVars->TPS) / 100) * 80;
+		laggedTPS += ((localTPS - CoreVars->TPS) / 100) * 60;
 		localDTPS = (laggedTPS - CoreVars->TPS) / 2;
 	} else {
-		laggedTPS -= ((CoreVars->TPS - localTPS) / 100) * 80;
+		laggedTPS -= ((CoreVars->TPS - localTPS) / 100) * 60;
 		localDTPS = -((signed)((CoreVars->TPS - laggedTPS) / 2));
 	}
 
@@ -162,7 +162,7 @@ void generateCoreVars(){
 	CoreVars->BRV = localBRV;
 	CoreVars->CHT = localCHT;
 	CoreVars->IAT = localIAT;
-	CoreVars->TPS = localTPS;
+	CoreVars->TPS = laggedTPS;
 	CoreVars->EGO = (((unsigned long)ADCBuffers->EGO * fixedConfigs2.sensorRanges.EGORange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.EGOMinimum;
 	CoreVars->MAP = (((unsigned long)ADCBuffers->MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
 	CoreVars->AAP = (((unsigned long)ADCBuffers->AAP * fixedConfigs2.sensorRanges.AAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.AAPMinimum;
@@ -176,5 +176,5 @@ void generateCoreVars(){
 
 //	CoreVars->DRPM = localDRPM;
 //	CoreVars->DDRPM = localDDRPM;
-	CoreVars->DTPS = laggedTPS;
+	CoreVars->DTPS = localDTPS;
 }

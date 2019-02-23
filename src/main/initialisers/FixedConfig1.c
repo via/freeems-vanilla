@@ -234,8 +234,8 @@ const volatile fixedConfig1 fixedConfigs1 FIXEDCONF1 = {
 			disableThreshold:  RPM(7200),
 			reenableThreshold: RPM(7150)
 #elif CONFIG == VIASUPRA_ID
-			disableThreshold:  RPM(6400),
-			reenableThreshold: RPM(6300)
+			disableThreshold:  RPM(6700),
+			reenableThreshold: RPM(6500)
 #else
 			disableThreshold:  RPM(5850),
 			reenableThreshold: RPM(5800)  // Come back on before ignition does
@@ -264,8 +264,8 @@ const volatile fixedConfig1 fixedConfigs1 FIXEDCONF1 = {
 			disableThreshold:  RPM(7200),
 			reenableThreshold: RPM(7100)
 #elif CONFIG == VIASUPRA_ID
-			disableThreshold:  RPM(6400),
-			reenableThreshold: RPM(6200)
+			disableThreshold:  RPM(6700),
+			reenableThreshold: RPM(6600)
 #else
 			disableThreshold:  RPM(5800),
 			reenableThreshold: RPM(5750)  // Come back on after injection does
