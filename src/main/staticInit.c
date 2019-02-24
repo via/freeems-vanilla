@@ -42,6 +42,7 @@
 
 // Values for testing
 unsigned short masterPulseWidth = 10;
+ADCBuffer PerToothADCBuffers[4];
 
 	/* Setup the pointers to the registers for fueling use, this does NOT work if done in global.c, I still don't know why. */
 //	injectorMainTimeRegisters[0] = TC2_ADDR;

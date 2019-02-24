@@ -41,6 +41,24 @@
 #include "inc/coreVarsGenerator.h"
 #include "inc/decoderInterface.h"
 
+#include "inc/interrupts.h"
+
+static unsigned short lag_filter(unsigned short old, unsigned short new, unsigned short percent, signed short *delta) {
+	unsigned short lagged = old;
+	signed short local_delta;
+	if (new > old) {
+		lagged += ((new - old) / 100) * percent;
+		local_delta = (lagged - old) / 2;
+	} else {
+		lagged -= ((old - new) / 100) * percent;
+		local_delta = -((signed)((old - lagged) / 2));
+	}
+  if (delta) {
+    *delta = local_delta;
+  }
+  return lagged;
+}
+
 
 /**
  * Calculate and obtain the core variables. Each raw ADC value is converted to a
@@ -112,15 +130,6 @@ void generateCoreVars(){
 	// Default to a low value that will get you home if you are in Alpha-N mode
 
 	/* Do lag filtering to produce a DTPS, hardcoded to 80% for testing */
-	unsigned short laggedTPS = CoreVars->TPS;
-	signed short localDTPS;
-	if (localTPS > CoreVars->TPS) {
-		laggedTPS += ((localTPS - CoreVars->TPS) / 100) * 60;
-		localDTPS = (laggedTPS - CoreVars->TPS) / 2;
-	} else {
-		laggedTPS -= ((CoreVars->TPS - localTPS) / 100) * 60;
-		localDTPS = -((signed)((CoreVars->TPS - laggedTPS) / 2));
-	}
 
 	/* Get RPM by locking out ISRs for a second and grabbing the Tooth logging data */
 	//atomic start
@@ -129,7 +138,7 @@ void generateCoreVars(){
 
 	// Calculate RPM and delta RPM and delta delta RPM from data recorded
 	if(*ticksPerDegree != 0){
-		CoreVars->RPM = (unsigned short)(degreeTicksPerMinute / *ticksPerDegree);
+    CoreVars->RPM = (unsigned short)(degreeTicksPerMinute / *ticksPerDegree);
 	}else{
 		CoreVars->RPM = 0;
 	}
@@ -159,15 +168,19 @@ void generateCoreVars(){
 	// from : http://www.tigoe.net/pcomp/code/category/code/arduinowiring/41
 
 	// for now just copy them in.
+  
 	CoreVars->BRV = localBRV;
 	CoreVars->CHT = localCHT;
 	CoreVars->IAT = localIAT;
-	CoreVars->TPS = laggedTPS;
+	signed short localDTPS;
+	CoreVars->TPS = lag_filter(CoreVars->TPS, localTPS, 80, &localDTPS);
 	CoreVars->EGO = (((unsigned long)ADCBuffers->EGO * fixedConfigs2.sensorRanges.EGORange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.EGOMinimum;
-	CoreVars->MAP = (((unsigned long)ADCBuffers->MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
 	CoreVars->AAP = (((unsigned long)ADCBuffers->AAP * fixedConfigs2.sensorRanges.AAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.AAPMinimum;
 	CoreVars->MAT = IATTransferTable[ADCBuffers->MAT];
 
+  /* Average the MAP over a cylinder */
+  unsigned short localMAP = (((unsigned long)ADCBuffers->MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
+  CoreVars->MAP = lag_filter(CoreVars->MAP, localMAP, 95, 0);
 
 	// Not actually used, feed raw values for now TODO migrate these to a SpecialVars struct or similar not included in default datalog
 	CoreVars->EGO2 = ADCBuffers->EGO2;

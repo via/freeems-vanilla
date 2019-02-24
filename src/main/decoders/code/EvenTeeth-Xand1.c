@@ -37,16 +37,14 @@
  * VR edition with only one edge used!
  */
 
-
 void decoderInitPreliminary(){
 	//  Set PT0 and PT1 to only capture on rising
 	TCTL4 = 0x05;  //  0000 0101 Capture rising edges only on PT0&1
 }
 
-static unsigned long lastCylinderEventTimestamp = 0;
-
 void perDecoderReset(){} // Nothing special to reset for this code
 
+static unsigned long lastCylinderEventTimestamp;
 
 
 void PrimaryRPMISR(){
@@ -104,21 +102,31 @@ void PrimaryRPMISR(){
 					// TODO Calculate RPM from last primaryTrailingEdgeTimeStamp
 				}
 			}
-		}/*else*/ if( (KeyUserDebugs.decoderFlags & LAST_TIMESTAMP_VALID) && 
-				(KeyUserDebugs.currentEvent % 4 == 3) ){ // TODO temp for testing just do rpm this way, fill above out later.
-			if (KeyUserDebugs.currentEvent % 12 == 3) {
-				unsigned long thisCylinderEventPeriod = thisEventTimeStamp - lastCylinderEventTimestamp;
-				lastCylinderEventTimestamp = thisEventTimeStamp;
-				*ticksPerDegreeRecord = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 
-			}
-			sampleEachADC(ADCBuffers);
+		}
+    if((KeyUserDebugs.decoderFlags & LAST_TIMESTAMP_VALID)) {
+      sampleEachADC(&PerToothADCBuffers[KeyUserDebugs.currentEvent % 4]);
 			Counters.syncedADCreadings++;
+	  	// Reset the clock for reading timeout
+		  Clocks.timeoutADCreadingClock = 0;
 
-			// Set flag to say calc required
-			coreStatusA |= CALC_FUEL_IGN;
+      if ((KeyUserDebugs.currentEvent % 12) == 2) {
+        unsigned long thisCylinderEventPeriod = thisEventTimeStamp - lastCylinderEventTimestamp;
+        lastCylinderEventTimestamp = thisEventTimeStamp;
+        *ticksPerDegreeRecord = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 
+      }
 
-			// Reset the clock for reading timeout
-			Clocks.timeoutADCreadingClock = 0;
+      if ((KeyUserDebugs.currentEvent % 4) == 2) {
+  		  *ADCBuffers = PerToothADCBuffers[KeyUserDebugs.currentEvent % 4];
+        ADCBuffers->MAP = 
+          ((unsigned long)PerToothADCBuffers[0].MAP + 
+           (unsigned long)PerToothADCBuffers[1].MAP + 
+           (unsigned long)PerToothADCBuffers[2].MAP + 
+           (unsigned long)PerToothADCBuffers[3].MAP) / 4;
+
+  			// Set flag to say calc required
+  			coreStatusA |= CALC_FUEL_IGN;
+      }
+
 		}
 
 		// for now, sample always and see what we get result wise...
