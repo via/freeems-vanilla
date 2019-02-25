@@ -69,7 +69,7 @@ int  main(){ /// @todo TODO maybe move this to paged flash ?
 			activeFuelChannels[fixedConfigs1.schedulingSettings.outputEventPinNumbers[outputEvent]] = outputEvent;
 		}
 	}
-	sampleEachADC(ADCBuffers);       // Read sensors
+	sampleEachADC(&ADCBuffers);       // Read sensors
 	generateCoreVars();              // Calculate BRV
 	generateDerivedVars();           // Calculate IDT
 	unsigned short primingPulseWidth = lookupTwoDTableUS((twoDTableUS*)&TablesA.SmallTablesA.primingVolumeTable, CoreVars->CHT);
@@ -105,7 +105,7 @@ int  main(){ /// @todo TODO maybe move this to paged flash ?
 			/* Check to ensure that a reading wasn't take before we entered a non interruptable state */
 			if(coreStatusA & FORCE_READING){ // do we still need to do this TODO ?
 
-				sampleEachADC(ADCBuffersRecord); // TODO still need to do a pair of loops and clock these two functions for performance.
+				sampleEachADC(&ADCBuffers); // TODO still need to do a pair of loops and clock these two functions for performance.
 				//sampleLoopADC(&ADCBuffers);
 				resetToNonRunningState(EVENT_ARRIVAL_TIMEOUT);
 				Counters.timeoutADCreadings++;
@@ -124,19 +124,6 @@ int  main(){ /// @todo TODO maybe move this to paged flash ?
 		if(coreStatusA & CALC_FUEL_IGN){
 			ATOMIC_START(); /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 			/* Atomic block to ensure that we don't clear the flag for the next data set when things are tight */
-
-			/* Switch input bank so that we have a stable set of the latest data */
-			if(ADCBuffers == &ADCBuffers1){
-				ticksPerDegree = &ticksPerDegree0; // TODO temp, remove, maybe
-				ticksPerDegreeRecord = &ticksPerDegree1; // TODO temp, remove, maybe
-				ADCBuffers = &ADCBuffers0;
-				ADCBuffersRecord = &ADCBuffers1;
-			}else{
-				ticksPerDegree = &ticksPerDegree1; // TODO temp, remove, maybe
-				ticksPerDegreeRecord = &ticksPerDegree0; // TODO temp, remove, maybe
-				ADCBuffers = &ADCBuffers1;
-				ADCBuffersRecord = &ADCBuffers0;
-			}
 
 			/* Clear the calc required flag */
 			coreStatusA &= CLEAR_CALC_FUEL_IGN;

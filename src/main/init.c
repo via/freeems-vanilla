@@ -442,11 +442,6 @@ void initVariables(){
 	/* And the opposite for the other halves */
 	CoreVars = &CoreVars0;
 	DerivedVars = &DerivedVars0;
-	ADCBuffers = &ADCBuffers0;
-	ADCBuffersRecord = &ADCBuffers1;
-
-	ticksPerDegree = &ticksPerDegree0; // TODO temp, remove, maybe
-	ticksPerDegreeRecord = &ticksPerDegree1; // TODO temp, remove, maybe
 
 	/* Setup the pointers to the registers for fueling use, this does NOT work if done in global.c, I still don't know why. */
 	ectMainTimeRegisters[0] = TC2_ADDR;

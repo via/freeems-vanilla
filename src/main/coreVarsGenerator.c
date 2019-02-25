@@ -69,11 +69,11 @@ void generateCoreVars(){
 	// Battery Reference Voltage
 	unsigned short localBRV;
 	if(!(fixedConfigs2.sensorSources.BRV)){
-		localBRV = (((unsigned long)ADCBuffers->BRV * fixedConfigs2.sensorRanges.BRVRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.BRVMinimum;
+		localBRV = (((unsigned long)ADCBuffers.BRV * fixedConfigs2.sensorRanges.BRVRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.BRVMinimum;
 	}else if(fixedConfigs2.sensorSources.BRV == SOURCE_PRESET){
 		localBRV = fixedConfigs2.sensorPresets.presetBRV;
 	}else if(fixedConfigs2.sensorSources.BRV == SOURCE_LINEAR){
-		localBRV = (ADCBuffers->BRV * 14) + VOLTS(7.2); // 0 ADC = 7.2V, 1023 ADC = 21.522C
+		localBRV = (ADCBuffers.BRV * 14) + VOLTS(7.2); // 0 ADC = 7.2V, 1023 ADC = 21.522C
 	}else{ // Default to normal alternator charging voltage 14.4V
 		localBRV = VOLTS(14.4);
 	}
@@ -81,11 +81,11 @@ void generateCoreVars(){
 	// Coolant/Head Temperature
 	unsigned short localCHT;
 	if(!(fixedConfigs2.sensorSources.CHT)){
-		localCHT = CHTTransferTable[ADCBuffers->CHT];
+		localCHT = CHTTransferTable[ADCBuffers.CHT];
 	}else if(fixedConfigs2.sensorSources.CHT == SOURCE_PRESET){
 		localCHT = fixedConfigs2.sensorPresets.presetCHT;
 	}else if(fixedConfigs2.sensorSources.CHT == SOURCE_LINEAR){
-		localCHT = (ADCBuffers->CHT * 10) + DEGREES_C(0); // 0 ADC = 0C, 1023 ADC = 102.3C
+		localCHT = (ADCBuffers.CHT * 10) + DEGREES_C(0); // 0 ADC = 0C, 1023 ADC = 102.3C
 	}else{ // Default to slightly cold and therefore rich: 65C
 		localCHT = DEGREES_C(65);
 	}
@@ -93,18 +93,18 @@ void generateCoreVars(){
 	// Inlet Air Temperature
 	unsigned short localIAT;
 	if(!(fixedConfigs2.sensorSources.IAT)){
-		localIAT = IATTransferTable[ADCBuffers->IAT];
+		localIAT = IATTransferTable[ADCBuffers.IAT];
 	}else if(fixedConfigs2.sensorSources.IAT == SOURCE_PRESET){
 		localIAT = fixedConfigs2.sensorPresets.presetIAT;
 	}else if(fixedConfigs2.sensorSources.IAT == SOURCE_LINEAR){
-		localIAT = (ADCBuffers->IAT * 10) + DEGREES_C(0); // 0 ADC = 0C, 1023 ADC = 102.3C
+		localIAT = (ADCBuffers.IAT * 10) + DEGREES_C(0); // 0 ADC = 0C, 1023 ADC = 102.3C
 	}else{ // Default to room temperature
 		localIAT = DEGREES_C(20);
 	}
 
 	// Throttle Position Sensor
 	/* Bound the TPS ADC reading and shift it to start at zero */
-	unsigned short unboundedTPSADC = ADCBuffers->TPS;
+	unsigned short unboundedTPSADC = ADCBuffers.TPS;
 	unsigned short boundedTPSADC;
 	if(fixedConfigs2.sensorRanges.TPSMaximumADC > fixedConfigs2.sensorRanges.TPSMinimumADC){
 		if(unboundedTPSADC > fixedConfigs2.sensorRanges.TPSMaximumADC){
@@ -137,13 +137,13 @@ void generateCoreVars(){
 	//atomic end
 
 	// Calculate RPM and delta RPM and delta delta RPM from data recorded
-	if(*ticksPerDegree != 0){
-    CoreVars->RPM = (unsigned short)(degreeTicksPerMinute / *ticksPerDegree);
+	if(ticksPerDegree != 0){
+    CoreVars->RPM = (unsigned short)(degreeTicksPerMinute / ticksPerDegree);
 	}else{
 		CoreVars->RPM = 0;
 	}
 
-	CoreVars->DRPM = *ticksPerDegree;
+	CoreVars->DRPM = ticksPerDegree;
 //	unsigned short localDRPM = 0;
 //	unsigned short localDDRPM = 0;
 
@@ -174,18 +174,18 @@ void generateCoreVars(){
 	CoreVars->IAT = localIAT;
 	signed short localDTPS;
 	CoreVars->TPS = lag_filter(CoreVars->TPS, localTPS, 80, &localDTPS);
-	CoreVars->EGO = (((unsigned long)ADCBuffers->EGO * fixedConfigs2.sensorRanges.EGORange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.EGOMinimum;
-	CoreVars->AAP = (((unsigned long)ADCBuffers->AAP * fixedConfigs2.sensorRanges.AAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.AAPMinimum;
-	CoreVars->MAT = IATTransferTable[ADCBuffers->MAT];
+	CoreVars->EGO = (((unsigned long)ADCBuffers.EGO * fixedConfigs2.sensorRanges.EGORange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.EGOMinimum;
+	CoreVars->AAP = (((unsigned long)ADCBuffers.AAP * fixedConfigs2.sensorRanges.AAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.AAPMinimum;
+	CoreVars->MAT = IATTransferTable[ADCBuffers.MAT];
 
   /* Average the MAP over a cylinder */
-  unsigned short localMAP = (((unsigned long)ADCBuffers->MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
+  unsigned short localMAP = (((unsigned long)ADCBuffers.MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
   CoreVars->MAP = lag_filter(CoreVars->MAP, localMAP, 80, 0);
 
 	// Not actually used, feed raw values for now TODO migrate these to a SpecialVars struct or similar not included in default datalog
-	CoreVars->EGO2 = ADCBuffers->EGO2;
-	CoreVars->IAP = ADCBuffers->IAP;
-	CoreVars->MAF = MAFTransferTable[ADCBuffers->MAF];
+	CoreVars->EGO2 = ADCBuffers.EGO2;
+	CoreVars->IAP = ADCBuffers.IAP;
+	CoreVars->MAF = MAFTransferTable[ADCBuffers.MAF];
 
 //	CoreVars->DRPM = localDRPM;
 //	CoreVars->DDRPM = localDDRPM;

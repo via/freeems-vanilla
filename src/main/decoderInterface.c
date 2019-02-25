@@ -62,8 +62,7 @@ void resetToNonRunningState(unsigned char uniqueLossID){
 	syncConfirmationsStartingCounter = fixedConfigs2.decoderSettings.syncConfirmationsStarting;
 
 	/* Reset RPM to zero */
-	ticksPerDegree0 = 0;
-	ticksPerDegree1 = 0;
+	ticksPerDegree = 0;
 
 	// Keep track of lost sync in counters
 	if(KeyUserDebugs.decoderFlags & (CAM_SYNC | CRANK_SYNC | COMBUSTION_SYNC)){

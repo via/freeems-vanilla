@@ -589,7 +589,7 @@ unsigned short lookupBlockDetails(unsigned short locationID, blockDetails* detai
 	case ADCRegistersLocationID:
 		details->size = sizeof(ADCBuffer);
 		details->RAMPage = RPAGE_LINEAR;
-		details->RAMAddress = (void*)ADCBuffers;
+		details->RAMAddress = &ADCBuffers;
 		break;
 	case coreVarsLocationID:
 		details->size = sizeof(CoreVar);

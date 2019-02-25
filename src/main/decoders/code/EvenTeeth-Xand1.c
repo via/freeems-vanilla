@@ -112,12 +112,12 @@ void PrimaryRPMISR(){
       if ((KeyUserDebugs.currentEvent % 12) == 2) {
         unsigned long thisCylinderEventPeriod = thisEventTimeStamp - lastCylinderEventTimestamp;
         lastCylinderEventTimestamp = thisEventTimeStamp;
-        *ticksPerDegreeRecord = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 
+        ticksPerDegree = (unsigned short)((ticks_per_degree_multiplier * thisCylinderEventPeriod) / eventAngles[12]); 
       }
 
       if ((KeyUserDebugs.currentEvent % 4) == 2) {
-  		  *ADCBuffers = PerToothADCBuffers[KeyUserDebugs.currentEvent % 4];
-        ADCBuffers->MAP = 
+  		  ADCBuffers = PerToothADCBuffers[KeyUserDebugs.currentEvent % 4];
+        ADCBuffers.MAP = 
           ((unsigned long)PerToothADCBuffers[0].MAP + 
            (unsigned long)PerToothADCBuffers[1].MAP + 
            (unsigned long)PerToothADCBuffers[2].MAP + 

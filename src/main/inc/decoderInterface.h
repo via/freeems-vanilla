@@ -84,10 +84,7 @@ EXTERN unsigned char selfSetTimer;			/* Set the start time of injection at the e
 
 
 // RPM - need some sort of state to say not to use these first time through...
-EXTERN unsigned short ticksPerDegree0; // to be replaced with logging scheme for teeth.
-EXTERN unsigned short ticksPerDegree1; // to be replaced with logging scheme for teeth.
-EXTERN unsigned short* ticksPerDegree; // final output variable, probably move into inputVars struct?
-EXTERN unsigned short* ticksPerDegreeRecord; // intermediate storage variable, do something with this?
+EXTERN unsigned short ticksPerDegree; // final output variable, probably move into inputVars struct?
 
 // Time/Sync
 
