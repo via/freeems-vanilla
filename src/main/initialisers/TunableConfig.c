@@ -97,8 +97,8 @@ const volatile SmallTables1 SmallTablesAFlashV  TUNETABLESDV1 = {
 		},
 #elif CONFIG == VIASUPRA_ID
 		injectorDeadTimeTable: {
-			Axis: { V(5), V(6), V(7), V(8), V(9), V(10), V(11), V(11.5), V(12), V(12.5), V(13), V(13.5), V(14), V(14.5), V(15), V(16) },
-			Values: { T(6.65),  T(5.31),  T(4.17),  T(3.23),  T(2.49),  T(1.94),  T(1.63),  T(1.54),  T(1.44),  T(1.36),  T(1.26),  T(1.19),  T(1.12),  T(1.06),  T(1),  T(0.92)}
+			Axis: { V(8.5), V(9), V(9.5), V(10), V(10.5), V(11), V(11.5), V(12), V(12.5), V(13), V(13.5), V(14), V(14.5), V(15), V(15.5), V(16) },
+			Values: { T(2.328),  T(2.087),  T(1.874),  T(1.691),  T(1.543),  T(1.428),  T(1.334),  T(1.245),  T(1.164),  T(1.095),  T(1.034),  T(0.977),  T(0.922),  T(0.871),  T(0.826),  T(0.786)}
 		},
 #else
 		injectorDeadTimeTable: {
