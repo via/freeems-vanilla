@@ -180,7 +180,7 @@ void generateCoreVars(){
 
   /* Average the MAP over a cylinder */
   unsigned short localMAP = (((unsigned long)ADCBuffers->MAP * fixedConfigs2.sensorRanges.MAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.MAPMinimum;
-  CoreVars->MAP = lag_filter(CoreVars->MAP, localMAP, 95, 0);
+  CoreVars->MAP = lag_filter(CoreVars->MAP, localMAP, 80, 0);
 
 	// Not actually used, feed raw values for now TODO migrate these to a SpecialVars struct or similar not included in default datalog
 	CoreVars->EGO2 = ADCBuffers->EGO2;
