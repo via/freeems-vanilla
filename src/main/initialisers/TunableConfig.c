@@ -98,7 +98,7 @@ const volatile SmallTables1 SmallTablesAFlashV  TUNETABLESDV1 = {
 #elif CONFIG == VIASUPRA_ID
 		injectorDeadTimeTable: {
 			Axis: { V(8.5), V(9), V(9.5), V(10), V(10.5), V(11), V(11.5), V(12), V(12.5), V(13), V(13.5), V(14), V(14.5), V(15), V(15.5), V(16) },
-			Values: { T(2.328),  T(2.087),  T(1.874),  T(1.691),  T(1.543),  T(1.428),  T(1.334),  T(1.245),  T(1.164),  T(1.095),  T(1.034),  T(0.977),  T(0.922),  T(0.871),  T(0.826),  T(0.786)}
+			Values: { T(3.45),  T(3.09),  T(2.77),  T(2.5),  T(2.28),  T(2.11),  T(1.97),  T(1.84),  T(1.722),  T(1.62),  T(1.53),  T(1.45),  T(1.38),  T(1.29),  T(1.22),  T(1.16)}
 		},
 #else
 		injectorDeadTimeTable: {
@@ -135,7 +135,7 @@ const volatile SmallTables1 SmallTablesAFlashV  TUNETABLESDV1 = {
 			Axis:   ARRAY_OF_16_TEMPS,
 			Values: ARRAY_OF_16_PERCENTS_WIDE
 #elif CONFIG == VIASUPRA_ID
-			Axis:   { C(-30),  C(-20),  C(-10),    C(0),   C(10),   C(20),   C(30),   C(40),   C(50),   C(60),   C(80),   C(87),   C(95),  C(100),  C(110),  C(120)},
+			Axis:   { C(-30),  C(-20),  C(-10),    C(0),   C(10),   C(20),   C(30),   C(40),   C(50),   C(60),   C(80),   C(87),   C(102),  C(105),  C(110),  C(120)},
 			Values: { W(200),  W(200),  W(200),  W(200),  W(170),  W(150),  W(130),  W(110),  W(100),  W(100),  W(100),  W(100),  W(100),  W(110),  W(120),  W(140)}
 #else
 			Axis:   ARRAY_OF_16_TEMPS,
