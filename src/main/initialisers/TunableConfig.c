@@ -78,7 +78,7 @@ const volatile SmallTables1 SmallTablesAFlashV  TUNETABLESDV1 = {
 			Values: { T(7.90),  T(7.90),  T(7.90),  T(7.90),  T(7.90),  T(7.35),  T(6.95),  T(6.50),  T(6.15),  T(5.75),  T(5.48),  T(5.20),  T(4.95),  T(3.80),  T(2.85),  T(2.00)}
 #elif CONFIG == VIASUPRA_ID
 			Axis:   ARRAY_OF_16_VOLTAGES,
-			Values: { T(9),  T(8),  T(7),  T(7),  T(6),  T(5),  T(4),  T(3.2),  T(3.2),  T(3.2),  T(3.2),  T(3.2),  T(2.5),  T(2),  T(2),  T(2)}
+			Values: { T(9),  T(8),  T(7),  T(7),  T(6),  T(5),  T(4),  T(3.2),  T(3.2),  T(2.8),  T(2.8),  T(2.8),  T(2.8),  T(2),  T(2),  T(2)}
 #else
 			Axis:   ARRAY_OF_16_VOLTAGES,
 			Values: ARRAY_OF_16_DWELLS
