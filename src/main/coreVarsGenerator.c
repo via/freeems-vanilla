@@ -173,7 +173,7 @@ void generateCoreVars(){
 	CoreVars->CHT = localCHT;
 	CoreVars->IAT = localIAT;
 	signed short localDTPS;
-	CoreVars->TPS = lag_filter(CoreVars->TPS, localTPS, 80, &localDTPS);
+	CoreVars->TPS = lag_filter(CoreVars->TPS, localTPS, 90, &localDTPS);
 	CoreVars->EGO = (((unsigned long)ADCBuffers.EGO * fixedConfigs2.sensorRanges.EGORange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.EGOMinimum;
 	CoreVars->AAP = (((unsigned long)ADCBuffers.AAP * fixedConfigs2.sensorRanges.AAPRange) / ADC_DIVISIONS) + fixedConfigs2.sensorRanges.AAPMinimum;
 	CoreVars->MAT = IATTransferTable[ADCBuffers.MAT];
